@@ -1,1 +1,1 @@
-# mapa_de_leitos_realtime_ws
+# WS do mapa de leitos
