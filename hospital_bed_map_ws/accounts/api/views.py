@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from rest_framework import mixins, generics
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,6 +6,7 @@ from .serializer import LoginSerializer
 from ..models import Users
 from ..utils import get_tokens_for_user
 
+#Classe responsável por realizar autenticação do usuário via api REST
 class LoginView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
 
     serializer_class = LoginSerializer
@@ -39,3 +40,10 @@ class LoginView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Generic
             return Response({'message': 'Usuário autenticado com sucesso.', 'data': [data]}, status=status.HTTP_200_OK)
         
         return Response({'message': 'Credencias inválidas', 'data': []}, status=status.HTTP_400_BAD_REQUEST)
+
+#Classe responsável por encerrar a sessão
+class LogoutView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+
+    def post(self, request):
+        logout(request)
+        return Response({'message': 'Sucesso ao finalizar a sessão.', 'data': []}, status=status.HTTP_200_OK)
