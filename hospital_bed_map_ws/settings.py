@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'drf_spectacular_sidecar',    
     'hospital_bed_map_ws.accounts',
+    'hospital_bed_map_ws.hospital_beds',
     'corsheaders',
 ]
 
