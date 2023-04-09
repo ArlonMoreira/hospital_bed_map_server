@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import datetime
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-4!=&(&xs^2&@jpa6l-9834)y4@4_cjq9h7b0)_dw5i#2esno2)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -40,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',    
     'drf_spectacular',
     'drf_spectacular_sidecar',    
-    'hospital_bed_map_ws.accounts'
+    'hospital_bed_map_ws.accounts',
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -53,6 +55,33 @@ REST_FRAMEWORK = {
     ],
 }
 
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Mapa de leitos (Hospital bed map)',
+    'DESCRIPTION': 'Projeto mapa de leitos hospitalar, com o objetivo de servir como ferramenta de apoio para regulação de leitos em unidades de saúde públicas ou privadas.</br>(Hospital bed map project, with the aim of serving as a support tool for regulating beds in public or private health units.)',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SERVERS': [
+        {
+            'url': os.environ['URL_INGRESS'],
+            'description': 'Servidor principal'
+        }
+    ],
+    'CONTACT': {
+        'name': 'Arlon da Silva Moreira',
+        'email': 'arlonsilva28@gmail.com'        
+    },
+    'COMPONENT_SPLIT_REQUEST': True,
+    'EXAMPLES_PROVIDE_CHOICES': True,   
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': False,
+        'persistAuthorization': False,
+        'displayOperationId': False        
+    },  
+    'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR'        
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -61,7 +90,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'hospital_bed_map_ws.urls'
 
