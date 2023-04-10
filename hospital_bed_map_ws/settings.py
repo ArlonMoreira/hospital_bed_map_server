@@ -150,7 +150,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-BR'
 
 TIME_ZONE = 'UTC'
 
@@ -174,6 +174,6 @@ AUTH_PROFILE_MODULE = 'accounts.Users'
 AUTH_USER_MODEL = 'accounts.Users'
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(seconds=30),
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(hours=2),
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
 }

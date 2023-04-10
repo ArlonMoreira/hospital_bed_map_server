@@ -38,7 +38,7 @@ class Hospital(models.Model):
         verbose_name_plural = 'Hospitais'
 
 # Tipo de acomodação
-class typeOfAccommodation(models.Model):
+class TypeOfAccommodation(models.Model):
     name = models.CharField(
         verbose_name='Nome do tipo de acomodação',
         max_length=255,
@@ -54,7 +54,7 @@ class typeOfAccommodation(models.Model):
         verbose_name_plural = 'Tipos de acomodação'
 
 # Unidades de saúde
-class healthUnits(models.Model):
+class HealthUnits(models.Model):
     name = models.CharField(
         verbose_name='Nome da unidade de saúde',
         max_length=255,
@@ -69,7 +69,7 @@ class healthUnits(models.Model):
         blank=True        
     )
     type_accommodation = models.ForeignKey(
-        typeOfAccommodation,
+        TypeOfAccommodation,
         verbose_name='Tipo de acomodação',
         on_delete=models.SET_NULL,
         null=True,
@@ -97,7 +97,7 @@ class healthUnits(models.Model):
         verbose_name_plural = 'Unidades de saúde'    
 
 # Leitos    
-class hospitalBeds(models.Model):
+class HospitalBeds(models.Model):
     STATUS_CHOICES = (
         ('BLOQUEADO', 'BLOQUEADO'),
         ('OCUPADO', 'OCUPADO'),
@@ -118,7 +118,7 @@ class hospitalBeds(models.Model):
         blank=False
     )    
     health_units = models.ForeignKey(
-        healthUnits,
+        HealthUnits,
         verbose_name='Unidade de saúde',
         on_delete=models.SET_NULL,
         null=True,
