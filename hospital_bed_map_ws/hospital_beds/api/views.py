@@ -12,26 +12,27 @@ class HospitalView(generics.GenericAPIView):
         hospital = Hospital.objects.filter(id=id).first()
         if hospital:
             serializer = self.serializer_class(hospital, data=request.data, context={'user': request.user}, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                return Response({'message': 'Hospital atualizado.', 'data': serializer.data}, status=status.HTTP_200_OK)
-            else:
+            if not(serializer.is_valid()):
                 return Response({'message': 'Falha ao atualizar hospital, verifique os dados inseridos e tente novamente.', 'data':serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+                
+            serializer_data = self.serializer_class(serializer.save()).data
+            return Response({'message': 'Dados do hospital atualizado.', 'data': serializer_data}, status=status.HTTP_200_OK)
+                
         else:
-            return Response({'message': 'Hospital {} não localizado.'.format(id), 'data': []}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'Hospital não localizado.', 'data': []}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, id=None):
         hospital = Hospital.objects.filter(id=id).first()
         if hospital:
             serializer = self.serializer_class(hospital).data
             hospital.delete()
-            return Response({'message': 'Hospital {} removido.'.format(id), 'data': [serializer]}, status=status.HTTP_200_OK)
+            return Response({'message': 'Hospital removido.'.format(id), 'data': [serializer]}, status=status.HTTP_200_OK)
         else:
-            return Response({'message': 'Hospital {} não localizado.'.format(id), 'data': []}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'message': 'Hospital não localizado.'.format(id), 'data': []}, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, id=None):
-        #Caso a requisição não seja passado um ID, serão recuperados os dados de todos os hospitais
-        #Passando o ID será recuperado os dados do ID específico
+        #If the request is not given an ID, data from all hospitals will be retrieved
+        #Passing the ID will retrieve the data of the specific ID
         if id is None:
             hospitals = Hospital.objects.all()
             serializer = self.serializer_class(hospitals, many=True)
@@ -51,7 +52,6 @@ class HospitalView(generics.GenericAPIView):
         if not(serializer.is_valid()):
             return Response({'message': 'Falha ao criar hospital, verifique os dados inseridos e tente novamente.', 'data':[serializer.errors]}, status=status.HTTP_400_BAD_REQUEST)
 
-        data = serializer.save()
-        serializer_data = self.serializer_class(data).data
+        serializer_data = self.serializer_class(serializer.save()).data
 
         return Response({'message': 'Hospital cadastrado.', 'data': [serializer_data]}, status=status.HTTP_201_CREATED)
