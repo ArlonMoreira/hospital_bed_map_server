@@ -1,6 +1,7 @@
-from rest_framework import generics, serializers, status
+from rest_framework import generics, status, serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from .serializer import HospitalSerializer
 from ..models import Hospital
 
@@ -31,6 +32,7 @@ class HospitalView(generics.GenericAPIView):
             return Response({'message': 'Hospital não localizado.'.format(id), 'data': []}, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, id=None):
+        id = request.query_params.get('id')
         #If the request is not given an ID, data from all hospitals will be retrieved
         #Passing the ID will retrieve the data of the specific ID
         if id is None:

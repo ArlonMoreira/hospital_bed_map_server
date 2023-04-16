@@ -49,7 +49,7 @@ class LoginView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Generic
             login(request, user)
             data = get_tokens_for_user(user)
 
-            return Response({'message': 'Usuário autenticado com sucesso.', 'data': [data]}, status=status.HTTP_200_OK)
+            return Response({'message': 'Usuário autenticado com sucesso.', 'data': data}, status=status.HTTP_200_OK)
         
         return Response({'message': 'Certifique-se que o usuário ou senha estão corretos.', 'data': []}, status=status.HTTP_400_BAD_REQUEST)
 
