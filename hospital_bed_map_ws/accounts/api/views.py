@@ -3,7 +3,6 @@ from rest_framework import mixins, generics, status, views
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiTypes, OpenApiExample
 from .serializer import LoginSerializer
-from ..models import Users
 from ..utils import get_tokens_for_user
 from .examples import LOGIN_RESPONSE_EXAMPLES, LOGIN_REQUESTS
 
@@ -24,24 +23,19 @@ class LoginView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Generic
         request=LOGIN_REQUESTS
     )
     def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if not(serializer.is_valid()):
+            return Response({'message': 'Certifique-se que o usuário ou senha estão corretos.', 'data': serializer.errors}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        serializer = serializer.data
 
-        try:
-            username = request.data['username']
-        except:
-            return Response({'message': 'Campo "username" não especificado.', 'data': []}, status=status.HTTP_400_BAD_REQUEST)
-        
-        try:
-            password = request.data['password']
-        except:
-            return Response({'message': 'Campo "password" não especificado.', 'data': []}, status=status.HTTP_400_BAD_REQUEST)
-        
         '''
         #https://docs.djangoproject.com/en/4.1/topics/auth/default/
         authenticate() method checks if the authentication credentials are valid. returns a User object if
         the credentials are valid for a backend. If credentials are not valid for any backend
         or if a backend throws PermissionDe
         '''        
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=serializer['username'], password=serializer['password'])
         if user is not None:
             '''
             The login() method logs in and saves the user ID to the session, using Django's session framework.
@@ -51,7 +45,7 @@ class LoginView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Generic
 
             return Response({'message': 'Usuário autenticado com sucesso.', 'data': data}, status=status.HTTP_200_OK)
         
-        return Response({'message': 'Certifique-se que o usuário ou senha estão corretos.', 'data': []}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': 'Certifique-se que o usuário ou senha estão corretos.', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
 
 #Class responsible for terminating the session
 class LogoutView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
