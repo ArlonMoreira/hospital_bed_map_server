@@ -6,45 +6,54 @@ LOGIN_RESPONSE_EXAMPLES = [
         description="successfully authenticated user",
         value={
             'message': 'Usuário autenticado com sucesso.',
-            'data': [
-                {
-                    'refresh': 'token_de_atualizacao_sessao',
-                    'access': 'seu_token_de_acesso'                           
-                }
-            ]
+            'data': {
+                'refresh': 'token_de_atualizacao_sessao',
+                'access': 'seu_token_de_acesso'                           
+            }
         },
         response_only=True,
         status_codes=["200"],
     ),
     OpenApiExample(
-        "validation username",
-        description="Required username field",
+        "validations field username",
+        description="validations username",
         value={
-            'message': 'Campo "username" não especificado.',
-            'data': []
+            "message": "Certifique-se que o usuário ou senha estão corretos.",
+            "data": {
+                "username": [
+                    "Usuário não cadastrado.",
+                    "Este campo não pode ser em branco.",
+                    "Este campo é obrigatório."
+                ]
+            }
         },
         response_only=True,
-        status_codes=["400"],
+        status_codes=["401"],
     ),
     OpenApiExample(
-        "validation password",
-        description="Required password field",
+        "validations field password",
+        description="validations password",
         value={
-            'message': 'Campo "password" não especificado.',
-            'data': []
+            "message": "Certifique-se que o usuário ou senha estão corretos.",
+            "data": {
+                "password": [
+                    "Este campo é obrigatório.",
+                    "Este campo não pode ser em branco."
+                ]
+            }
         },
         response_only=True,
-        status_codes=["400"],
+        status_codes=["401"],
     ),
     OpenApiExample(
         "Failure",
         description="Authentication failed due to incorrect user account or password",
         value={
             'message': 'Certifique-se que o usuário ou senha estão corretos.',
-            'data': []
+            'data': {}
         },
         response_only=True,
-        status_codes=["400"],
+        status_codes=["401"],
     ),        
 ]
 

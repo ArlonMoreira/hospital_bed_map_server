@@ -13,3 +13,10 @@ class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = Users
         fields = ('username', 'password')
+
+    def validate(self, attrs):
+        username = attrs.get('username')
+        if(not(Users.objects.filter(username=username).exists())):
+            raise serializers.ValidationError({'username': 'Usuário não cadastrado.'})
+        
+        return attrs
