@@ -1,10 +1,44 @@
 from django.contrib.auth import authenticate, login, logout
-from rest_framework import mixins, generics, status, views
+from rest_framework import mixins, generics, status
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from drf_spectacular.utils import extend_schema, OpenApiTypes, OpenApiExample
 from .serializer import LoginSerializer
 from ..utils import get_tokens_for_user
 from .examples import LOGIN_RESPONSE_EXAMPLES, LOGIN_REQUESTS
+
+#Customiza a atualização do token para retornar também o refresh token como resposta
+class RefreshTokenView(TokenRefreshView):
+
+    def handle_exception(self, exc):
+        if isinstance(exc, InvalidToken) or isinstance(exc, TokenError):
+            return Response({'message': 'Falha ao atualizar à sessão.', 'data': {}}, status=status.HTTP_401_UNAUTHORIZED)
+        return super().handle_exception(exc)    
+
+    @extend_schema(
+        description='Refresh access token.',
+        auth=False,
+        responses={
+            200: OpenApiTypes.OBJECT
+        },
+        examples=LOGIN_RESPONSE_EXAMPLES
+    )    
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        refresh_token = serializer.validated_data.get('refresh')
+        refresh = RefreshToken(refresh_token)
+        data = {
+            'message': 'Sessão renovada.',
+            'data': {
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),      
+            }
+        }
+
+        return Response(data)
 
 #Class responsible for performing user authentication via REST API
 class LoginView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
@@ -17,7 +51,7 @@ class LoginView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Generic
         auth=False,
         responses={
             200: OpenApiTypes.OBJECT,
-            400: OpenApiTypes.OBJECT
+            401: OpenApiTypes.OBJECT
         },
         examples=LOGIN_RESPONSE_EXAMPLES,
         request=LOGIN_REQUESTS
@@ -45,7 +79,7 @@ class LoginView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Generic
 
             return Response({'message': 'Usuário autenticado com sucesso.', 'data': data}, status=status.HTTP_200_OK)
         
-        return Response({'message': 'Certifique-se que o usuário ou senha estão corretos.', 'data': {}}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': 'Certifique-se que o usuário ou senha estão corretos.', 'data': {}}, status=status.HTTP_401_UNAUTHORIZED)
 
 #Class responsible for terminating the session
 class LogoutView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
