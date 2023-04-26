@@ -14,7 +14,7 @@ class RefreshTokenView(TokenRefreshView):
 
     def handle_exception(self, exc):
         if isinstance(exc, InvalidToken) or isinstance(exc, TokenError):
-            return Response({'message': 'Falha ao atualizar à sessão.', 'data': {}}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'message': 'Sua sessão foi encerrada.', 'data': {}}, status=status.HTTP_401_UNAUTHORIZED)
         return super().handle_exception(exc)    
 
     @extend_schema(
@@ -33,7 +33,7 @@ class RefreshTokenView(TokenRefreshView):
         data = {
             'message': 'Sessão renovada.',
             'data': {
-                'refresh': str(refresh),
+                'refresh': request.data['refresh'],
                 'access': str(refresh.access_token),      
             }
         }
