@@ -17,18 +17,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include
-from .accounts.api.views import RefreshTokenView
 from drf_spectacular.views import SpectacularJSONAPIView, SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('hospital_bed_map.accounts.api.url')),
     path('hospital_beds/', include('hospital_bed_map.hospital_beds.api.url')),
-    path('token/refresh/', RefreshTokenView.as_view(), name='token_refresh'),
     # YOUR PATTERNS
     path('api/docs/', SpectacularJSONAPIView.as_view(), name='schema-json'),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     # Optional UI:
     path('api/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path('', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]

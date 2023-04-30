@@ -58,7 +58,8 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Mapa de leitos (Hospital bed map)',
-    'DESCRIPTION': 'Projeto mapa de leitos hospitalar, com o objetivo de servir como ferramenta de apoio para regulação de leitos em unidades de saúde públicas ou privadas.</br>(Hospital bed map project, with the aim of serving as a support tool for regulating beds in public or private health units.)',
+    'DESCRIPTION': '<p>O projeto Mapa de Leitos Hospitalar tem como objetivo gerenciar a regulação de leitos em unidades de saúde públicas ou privadas. Através de uma autenticação segura, os usuários podem criar hospitais, leitos e unidades de internação, além de atualizar e excluir essas informações conforme necessário. O mapa de leitos permite aos usuários visualizar em uma única tela quais leitos estão disponíveis, ocupados ou bloqueados em tempo real, permitindo uma melhor gestão dos recursos disponíveis para os pacientes. Além disso, a aplicação também fornece recursos de relatórios para permitir a geração de dados estatísticos relevantes para a tomada de decisões.</p>\
+        <i>The Mapa de Leitos Hospitalar project aims to manage bed regulation in public or private health facilities. Through a secure authentication, users can create hospitals, beds, and hospitalization units, as well as update and delete this information as necessary. The bed map allows users to view in a single screen which beds are available, occupied or blocked in real time, enabling better management of the resources available for patients. Additionally, the application provides reporting features to enable the generation of relevant statistical data for decision-making.</i>',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'SERVERS': [
