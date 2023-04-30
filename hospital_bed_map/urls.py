@@ -1,5 +1,5 @@
 """
-URL configuration for hospital_bed_map_ws project.
+URL configuration for hospital_bed_map project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -22,8 +22,8 @@ from drf_spectacular.views import SpectacularJSONAPIView, SpectacularAPIView, Sp
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('hospital_bed_map_ws.accounts.api.url')),
-    path('hospital_beds/', include('hospital_bed_map_ws.hospital_beds.api.url')),
+    path('accounts/', include('hospital_bed_map.accounts.api.url')),
+    path('hospital_beds/', include('hospital_bed_map.hospital_beds.api.url')),
     path('token/refresh/', RefreshTokenView.as_view(), name='token_refresh'),
     # YOUR PATTERNS
     path('api/docs/', SpectacularJSONAPIView.as_view(), name='schema-json'),

@@ -80,31 +80,3 @@ class LoginView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Generic
             return Response({'message': 'Usuário autenticado com sucesso.', 'data': data}, status=status.HTTP_200_OK)
         
         return Response({'message': 'Certifique-se que o usuário ou senha estão corretos.', 'data': {}}, status=status.HTTP_401_UNAUTHORIZED)
-
-#Class responsible for terminating the session
-class LogoutView(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
-    authentication_classes = []
-    permission_classes = []
-
-    @extend_schema(
-        description='Terminate the user session.',
-        auth=False,
-        responses={
-            200: OpenApiTypes.OBJECT,
-        },
-        examples=[    
-            OpenApiExample(
-                "logoff",
-                description="End user session in browser",
-                value={
-                    'message': 'Sucesso ao finalizar à sessão.',
-                    'data': []
-                },
-                response_only=True,
-                status_codes=["200"],
-            ),      
-        ]
-    )
-    def post(self, request):
-        logout(request)
-        return Response({'message': 'Sucesso ao finalizar à sessão.', 'data': []}, status=status.HTTP_200_OK)
